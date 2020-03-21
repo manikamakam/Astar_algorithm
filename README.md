@@ -34,12 +34,7 @@ python Astar_rigid.py --user_input 1
 If 'user_input' is 1, then user is allowed to give inputs of his wish. 
 If 'user_input' is 0:
 
-start point = (50.0, 30.0, 60.0)
-theta = 30.0
-goal point = (150, 150, 0)
-robot_radius = 1.0
-clearance = 1.0
-step_size = 1.0
+start point = (50.0, 30.0, 60.0), theta = 30.0, goal point = (150, 150, 0), robot_radius = 1.0, clearance = 1.0, step_size = 1.0
 
 The program will be terminated when you press any key on the keyboard after the path is displayed.
 
