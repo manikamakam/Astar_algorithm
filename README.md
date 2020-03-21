@@ -41,7 +41,7 @@ The program will be terminated when you press any key on the keyboard after the 
 ## Output
 
 The time taken by the algorithm to find the shortest path for default inputs is approximately 9 seconds.
-The time taken to find the shortest path including the live exploration of nodes is approximately 320 seconds.
+The time taken to find the shortest path including the live exploration of nodes is approximately 6 minutes
 
 The program will display the explored nodes as the search space is explored and will display the shortest path after it is found.
 
