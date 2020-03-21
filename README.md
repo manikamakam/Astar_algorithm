@@ -29,7 +29,7 @@ The inputs are coordinates of start point, orientation of start point, coordinat
 Go to the directory where code is present and run the following command
 
 ```
-python astar.py --user_input 0
+python Astar_rigid.py --user_input 0
 ```
 If user_input is 1, then user is allowed to give inputs of his wish. If user_input is 0; start point = (50.0, 30.0, 60.0), theta = 30.0, goal point = (150, 150, 0), robot_radius = 1.0, clearance = 1.0, step_size = 1.0. 
 
