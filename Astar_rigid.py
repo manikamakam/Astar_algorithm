@@ -1,3 +1,4 @@
+import cv2
 import numpy as np
 import time
 import math
@@ -9,8 +10,6 @@ plt.ion()
 
 height = 200
 width = 300
-
-
 def check(x, y, r, c, c1):
     # Rhombus
     if ((x * (-3 / 5) + y - 55 - r - c < 0) and (x * (3 / 5) + y - 325 - r - c < 0) and (
@@ -27,7 +26,7 @@ def check(x, y, r, c, c1):
         return True
 
     # polygon - triangle2
-    elif y + 13 * x - 340 + c + r + c1 > 0 and x + y - 100 - r - c < 0 and x * (-7 / 5) + y + 20 > 0:
+    elif y + 13 * x - 340 +r +c + c1 > 0 and x + y - 100 -r -c < 0 and x * (-7 / 5) + y + 20 > 0:
         return True
 
     # rectangle -angled
@@ -54,7 +53,7 @@ def obstaclecheck_ellipse(x, y, r, c):
 
 
 def obstacle_check(new_i, new_j, r, c):
-    c1 = 40
+    c1 = 0
     if obstaclecheck_circle(new_i, new_j, r, c):
         return True
     elif obstaclecheck_ellipse(new_i, new_j, r, c):
@@ -75,21 +74,26 @@ def goalcheck_circle(x, y, goal_x, goal_y):
         return False
 
 
-def obstacle_map(rad, clearance):
-    plot_x = []
-    plot_y = []
-    rigid_x = []
-    rigid_y = []
-    for x in range(300):
-        for y in range(200):
-            if obstacle_check(x, 200 - y, rad, clearance):
-                rigid_x.append(x)
-                rigid_y.append(y)
-            #                 blank_image[x, y] = (150, 150, 150)
-            if obstacle_check(x, 200 - y, 0, 0):
-                plot_x.append(x)
-                plot_y.append(y)
-    return plot_x, plot_y, rigid_x, rigid_y
+def obstacle_map(rad, clearance,start_node,goal_node):
+    obs_map = np.zeros((200,300, 3), np.uint8)
+    for x in range(200):
+        for y in range(300):
+            if obstacle_check(y,x, rad, clearance):
+                obs_map[x, y] = (150, 150, 150)
+            if obstacle_check(y,x,0, 0):
+                obs_map[x, y] = (255,255,255)
+                # obs_map[x, y] = (0,0,0)
+    width = int(obs_map.shape[1] * 2)
+    height = int(obs_map.shape[0] * 2)
+    dim = (width, height)
+    cv2.imshow("obsmap", obs_map)
+    cv2.waitKey(0)      
+    resized = cv2.resize(obs_map, dim, interpolation = cv2.INTER_AREA)
+    resized = cv2.circle(resized,(int(start_node[0]/0.5), int(400-start_node[1]/0.5)),1, (0,255,0), 2) 
+    resized = cv2.circle(resized,(int(goal_node[0]/0.5), int(400-goal_node[1]/0.5)),1, (0,255,0), 2)
+    cv2.imshow("Astar", resized)
+    cv2.waitKey(1)
+    return resized 
 
 
 def action_model(step_size, theta, current_node):
@@ -121,11 +125,9 @@ def threshold(x, y, th, theta):
     return (x, y, th)
 
 
-def a_star(start_node, goal_node, step_size, theta, rad, clearance):
-    x_explored =[]
-    y_explored =[]
-    x_parent = []
-    y_parent = []
+def a_star(start_node, goal_node, step_size, theta, rad, clearance,resized):
+    # explored_nodes =[]
+    # parent_nodes = []
     start_node = threshold(start_node[0], start_node[1], start_node[2], theta)
     goal_node = threshold(goal_node[0], goal_node[1], goal_node[2], theta)
     #     print(goal_node)
@@ -189,10 +191,11 @@ def a_star(start_node, goal_node, step_size, theta, rad, clearance):
             if obstacle_check(node[0], 200 - node[1], rad, clearance) == False:
                 if (visited_nodes[int(node[0] / 0.5)][int(node[1] / 0.5)][int(node[2] / theta)] == 0):
                     visited_nodes[int(node[0] / 0.5)][int(node[1] / 0.5)][int(node[2] / theta)] = 1
-                    x_explored.append(node[0])
-                    y_explored.append(node[1])
-                    x_parent.append(node_parent[0])
-                    y_parent.append(node_parent[1])
+                    # explored_nodes.append((int(node[0]/0.5),int(400- node[1]/0.5)))
+                    # parent_nodes.append((int(node_parent[0]/0.5),int(400 -node_parent[1]/0.5)))
+                    cv2.line(resized, (int(node_parent[0]/0.5),int(400 -node_parent[1]/0.5)),(int(node[0]/0.5),int(400- node[1]/0.5)), (255,0,0),1) 
+                    cv2.imshow("Astar", resized)
+                    cv2.waitKey(1)
                     new_node = (node_cost, node, node_parent)
                     nodes.put(new_node)
 
@@ -204,6 +207,7 @@ def a_star(start_node, goal_node, step_size, theta, rad, clearance):
             # print("Time taken to explore = ",current_time)
             path = []
 
+            path.append((int(current_node[1][0]/0.5), int(400-current_node[1][1]/0.5)))
             # plt.plot(goal_node[0], goal_node[1], color='green', marker='o', linestyle='dashed', linewidth=1, markersize=1)
             str_p1 = str(current_node[2][0])
             str_p2 = str(current_node[2][1])
@@ -240,17 +244,13 @@ def a_star(start_node, goal_node, step_size, theta, rad, clearance):
                 if(parent[2]=='.' and parent[8]=='.'):
                     par_1 = float(parent[0]+parent[1])+float(parent[3])/10
                     par_2 = float(parent[5]+parent[6]+parent[7])+float(parent[9])/10
-                path.append((par_1,par_2))
+                path.append((int(par_1/0.5),int(400-par_2/0.5)))
                 parent = temp
                 if((par_1,par_2) == (start_node[0],start_node[1])):
                     break
-            # t = time.localtime()
-            # current_time = time.strftime("%H:%M:%S", t)
-            # print("time taken to backtrack = ",current_time)
-            # plt.plot(start_node[0],start_node[1], color='green', marker='o', linestyle='dashed', linewidth=1, markersize=1)
-            path.append((start_node[0], start_node[1]))
-            # print("Backtracking done - shortest path found")
-            return path,x_explored,y_explored,x_parent,y_parent
+                    
+            path.append((int(start_node[0]/0.5), int(400-start_node[1]/0.5)))
+            return path
 
 
 def main():
@@ -286,9 +286,7 @@ def main():
         clearance = 1.0
         step_size = 1.0
         
-    # t = time.localtime()
-    # current_time = time.strftime("%H:%M:%S", t)
-    # print("start_time = ", current_time)
+
     start_time = time.time()
     start_node = (x_start, y_start, theta_start)
     goal_node = (x_goal, y_goal, theta_goal)
@@ -297,48 +295,26 @@ def main():
     elif obstacle_check(goal_node[0], 200 - goal_node[1], robot_radius, clearance) == True:
         print("The goal node is either in the obstacle space or out of map")
     else:
-
-        path,x_explored,y_explored,x_parent,y_parent = a_star(start_node, goal_node, step_size, theta, robot_radius, clearance)
-
-
+        resized = obstacle_map(robot_radius, clearance,start_node,goal_node)
+        path = a_star(start_node, goal_node, step_size, theta, robot_radius, clearance, resized)
         if path == None:
             print("Path could not be found. Check inputs")
 
         else:
             end_time = time.time()
-            print('Time (in seconds) taken to find the shortest path is: ',abs(end_time - start_time))
-
-
-            plt.xlim(0, 300)
-            plt.ylim(0, 200)
-            # plt.xlim(0, 10)
-            # plt.ylim(0, 10)
-
-            plot_x, plot_y, rigid_x, rigid_y = obstacle_map(robot_radius, clearance)
-
-            plt.plot(rigid_x, rigid_y, ".y")
-            plt.plot(plot_x, plot_y, ".k")
-
-            l = 0
-            while l < len(x_explored):
-                plt.plot([x_explored[l], x_parent[l]], [y_explored[l], y_parent[l]], "-c")
-                l = l + 1
-                plt.show()
-                plt.pause(0.000000000000000000000000000000000005)
-
+            print('Time (in seconds) taken to find the shortest path with live exploration of nodes is: ',abs(end_time - start_time))
 
             path = path[::-1]
-            x_path = [path[i][0] for i in range(len(path))]
-            y_path = [path[i][1] for i in range(len(path))]
-            plt.plot(x_path, y_path, "-r")
+            m=0
+            while m<len(path)-1:
+                if m ==len(path)-2:
+                    cv2.waitKey(0)
+                    break
+                cv2.line(resized, path[m],path[m+1], (0,0,255),1)
+                m = m + 1
+                cv2.imshow("Astar", resized)
+                cv2.waitKey(1)
 
-            plt.show()
-            plt.pause(5)
-            plt.close()
-            # t = time.localtime()
-            # current_time = time.strftime("%H:%M:%S", t)
-            # print("Time taken to plot = ",current_time)
-            
 
 
 if __name__ == '__main__':
