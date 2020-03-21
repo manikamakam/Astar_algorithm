@@ -1,6 +1,5 @@
 # Astar_algorithm
 
-# dijkstra_algorithm
 Implementation of Astar algorithm in python
 
 ## Authors
@@ -27,12 +26,12 @@ Implementation of Astar algorithm in python
 
 The inputs are coordinates of start point, orientation of start point, coordinates of goal point, robot radius, clearance, theta (the angle between the action at each node) and step size. All the inputs are float. The orientation of goal point is taken by default as 0.
 
-Go to the directory where code is present and run the following command for point robot
+Go to the directory where code is present and run the following command
 
 ```
 python astar.py --user_input 0
 ```
-If user_input is 1, then user is allowed to give inputs of his wish. If user_input is 0; start point = (50.0, 30.0, 60.0), theta = 30.0, goal point is (150, 150, 0), robot_radius = 1.0, clearance = 1.0, step_size = 1.0. 
+If user_input is 1, then user is allowed to give inputs of his wish. If user_input is 0; start point = (50.0, 30.0, 60.0), theta = 30.0, goal point = (150, 150, 0), robot_radius = 1.0, clearance = 1.0, step_size = 1.0. 
 
 ## Output
 
