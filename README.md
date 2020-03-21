@@ -14,7 +14,7 @@ Implementation of Astar algorithm in python
 ## Dependencies
 
  1. numpy library
- 2. matplotlib library
+ 2. cv2 library
  3. queue library
  4. math library
  5. time library
@@ -29,11 +29,26 @@ The inputs are coordinates of start point, orientation of start point, coordinat
 Go to the directory where code is present and run the following command
 
 ```
-python Astar_rigid.py --user_input 0
+python Astar_rigid.py --user_input 1
 ```
-If user_input is 1, then user is allowed to give inputs of his wish. If user_input is 0; start point = (50.0, 30.0, 60.0), theta = 30.0, goal point = (150, 150, 0), robot_radius = 1.0, clearance = 1.0, step_size = 1.0. 
+If 'user_input' is 1, then user is allowed to give inputs of his wish. 
+If 'user_input' is 0:
+
+start point = (50.0, 30.0, 60.0)
+theta = 30.0
+goal point = (150, 150, 0)
+robot_radius = 1.0
+clearance = 1.0
+step_size = 1.0
+
+The program will be terminated when you press any key on the keyboard after the path is displayed.
 
 ## Output
+
+The time taken by the algorithm to find the shortest path for default inputs is approximately 9 seconds.
+The time taken to find the shortest path including the live exploration of nodes is approximately 320 seconds.
+
+The program will display the explored nodes as the search space is explored and will display the shortest path after it is found.
 
 The video output can be accessed here:
 https://drive.google.com/drive/folders/1AgRXgyogmuREwNg90ecDwI6LoKeRHZlb?usp=sharing
