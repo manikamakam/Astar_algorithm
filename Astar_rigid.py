@@ -5,7 +5,6 @@ import math
 import queue
 import argparse
 
-plt.ion()
 
 height = 200
 width = 300
@@ -84,9 +83,7 @@ def obstacle_map(rad, clearance,start_node,goal_node):
                 # obs_map[x, y] = (0,0,0)
     width = int(obs_map.shape[1] * 2)
     height = int(obs_map.shape[0] * 2)
-    dim = (width, height)
-    cv2.imshow("obsmap", obs_map)
-    cv2.waitKey(0)      
+    dim = (width, height)     
     resized = cv2.resize(obs_map, dim, interpolation = cv2.INTER_AREA)
     resized = cv2.circle(resized,(int(start_node[0]/0.5), int(400-start_node[1]/0.5)),1, (0,255,0), 2) 
     resized = cv2.circle(resized,(int(goal_node[0]/0.5), int(400-goal_node[1]/0.5)),1, (0,255,0), 2)
