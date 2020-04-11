@@ -262,8 +262,7 @@ def a_star(start_node, goal_node, step_size, theta, rad, clearance, L_rpm, R_rpm
             # print("currr", current_node[1])
             path.append(current_node[1])
 
-            plt.plot(goal_node[0], goal_node[1], color='green', marker='o', linestyle='dashed', linewidth=1,
-                     markersize=4)
+            
             #             str_p1 = str(current_node[2][0])
             #             str_p2 = str(current_node[2][1])
             #             str_p3 = str(current_node[2][2])
@@ -284,8 +283,7 @@ def a_star(start_node, goal_node, step_size, theta, rad, clearance, L_rpm, R_rpm
             # t = time.localtime()
             # current_time = time.strftime("%H:%M:%S", t)
             # print("time taken to backtrack = ", current_time)
-            plt.plot(start_node[0], start_node[1], color='green', marker='o', linestyle='dashed', linewidth=1,
-                     markersize=4)
+            
             # path.append((start_node[0], start_node[1], start_node[2]))
             print("Backtracking done - shortest path found")
 
@@ -352,7 +350,7 @@ def main():
     clearance1 = float(input('Enter the clearance for the robot: '))
 
     robot_radius = 0.08
-    clearance = 0.4 + clearance1
+    clearance = 0.1 + clearance1
     theta = 15
     step_size = 1
     theta_goal = 0.0
@@ -443,19 +441,26 @@ def main():
             #     l = l + 1
             #     plt.show()
             #     plt.pause(0.000000000000000000000000000000000005)
+            plt.plot(goal_node[0], goal_node[1], color='green', marker='o', linestyle='dashed', linewidth=1,
+                     markersize=4)
+            plt.plot(start_node[0], start_node[1], color='green', marker='o', linestyle='dashed', linewidth=1,
+                     markersize=4)
 
             path = path[::-1]
             x_path = [path[i][0] for i in range(len(path))]
             y_path = [path[i][1] for i in range(len(path))]
             plt.plot(x_path, y_path, "-r")
+
+            plt.pause(5)
+            plt.close()
+            ros_pub(path, act)
     # plt.figure(figsize=(10, 10))
     # plt.show()
     # plt.savefig("mygraph.png")
-    plt.pause(5)
-    plt.close()
-    t = time.localtime()
-    end_time2 = time.time()
-    ros_pub(path, act)
+    
+    # t = time.localtime()
+    # end_time2 = time.time()
+
     # print("Time taken to find the shortest path and to plot (in seconds) is:", abs(end_time2 - start_time))
 
 

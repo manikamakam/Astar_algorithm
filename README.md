@@ -67,7 +67,7 @@ The inputs from user are are coordinates of start point, orientation of start po
 
 Robot radius is taken by default as 0.08 (which is half the distance between wheels of the robot). Theta (the angle between the action at each node) is taken as 15. The orientation of goal point is taken by default as 0. 
 
-The total clearance is clearance given by user + 0.4 (minimum clearance).
+The total clearance is clearance given by user + 0.1 (minimum clearance).
 
 Run roscore in one terminal. And in other terminal run the following command:
 
@@ -84,7 +84,7 @@ For video 1:
 
 start point = (4.5,3,0)
 goal point = (0.5,3,0)
-clearance = 0.1
+clearance = 0
 RPM values = (2,3)
 
 The command to run is:
@@ -96,8 +96,6 @@ For video 2:
 
 start point = (4.5,4.5,0)
 goal point = (-3.5,-3.5,0)
-clearance = 0.4
+clearance = 0.3
 RPM values = (2,3)
-
-
 
