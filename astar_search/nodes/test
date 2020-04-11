@@ -103,6 +103,8 @@ def plot_curve(Xi,Yi,Thetai,UL,UR,r,c,flag,N_list, S_list):
     Xn=Xi
     Yn=Yi
     Thetan = 3.14 * Thetai / 180
+    # UL = UL*2*math.pi/60
+    # UR = UR*2*math.pi/60
 
     while t<10:
         t = t + dt
@@ -131,9 +133,6 @@ def ros_inputs(Xi, Yi, Thetai, UL, UR):
     r = 0.033 #in metres
     L = 0.16 #in metres
     dt = 10
-
-    UL1 = UL
-    UR1 = UR
 
     UL = UL*2*math.pi/60
     UR = UR*2*math.pi/60
@@ -174,16 +173,16 @@ def a_star(start_node, goal_node, step_size, theta, rad, clearance, L_rpm, R_rpm
 
     while (1):
         current_node = list(nodes.get())
-        print("popped off node")
-        print("\n")
-        print("current_node", current_node)
+        # print("popped off node")
+        # print("\n")
+        # print("current_node", current_node)
         if (current_node[2] != None):
             current_node[0] = current_node[0] - cost2go(current_node[1], goal[1])
             action_dict[current_node[1]] = current_node[3]
-            print("action_dict", current_node[1], current_node[3])
+            # print("action_dict", current_node[1], current_node[3])
 
 
-        print("path_dict",current_node[1], current_node[3])
+        # print("path_dict",current_node[1], current_node[3])
         path_dict[current_node[1]] = current_node[2]
 
         actions = action_model(L_rpm, R_rpm)
@@ -260,7 +259,7 @@ def a_star(start_node, goal_node, step_size, theta, rad, clearance, L_rpm, R_rpm
             # print("Time taken to explore = ", current_time)
             path = []
             # path.append((goal_node[0], goal_node[1]))
-            print("currr", current_node[1])
+            # print("currr", current_node[1])
             path.append(current_node[1])
 
             plt.plot(goal_node[0], goal_node[1], color='green', marker='o', linestyle='dashed', linewidth=1,
@@ -292,15 +291,15 @@ def a_star(start_node, goal_node, step_size, theta, rad, clearance, L_rpm, R_rpm
 
             # del path[-1]
             path = path[::-1]
-            print("\n")
+            # print("\n")
             # print("action_dict", action_dict)
             for p in path:
                 act.append(action_dict.get(p))
 
             # print(N_list, S_list)
 
-            print("path = ", path)
-            print("action = ",act)
+            # print("path = ", path)
+            # print("action = ",act)
             return act, path, N_list, S_list
 
 def ros_pub(path, act):
@@ -323,7 +322,7 @@ def ros_pub(path, act):
     r = rospy.Rate(10)
 
     for i in range(len(path)):
-        print("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii", i)
+        # print("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii", i)
         while not rospy.is_shutdown():
             if c== 101:
                 msg.linear.x = 0
@@ -342,42 +341,47 @@ def ros_pub(path, act):
 def main():
 
     # if user_input == 1:
-    #     x_start = float(input('Enter the x-coordinate of start point: '))
-    #     y_start = float(input('Enter the y-coordinate of start point: '))
-    #     theta_start = float(input('Enter the orientation of start point: '))
-    #     x_goal = float(input('Enter the x-coordinate of goal point: '))
-    #     y_goal = float(input('Enter the y-coordinate of goal point: '))
+    x_start = float(input('Enter the x-coordinate of start point: '))
+    y_start = float(input('Enter the y-coordinate of start point: '))
+    theta_start = float(input('Enter the orientation of start point: '))
+    x_goal = float(input('Enter the x-coordinate of goal point: '))
+    y_goal = float(input('Enter the y-coordinate of goal point: '))
 
-    #     L_rpm = float(input('Enter the left wheel RPM: '))
-    #     R_rpm = float(input('Enter the right wheel RPM: '))
-    #     clearance1 = float(input('Enter the clearance for the robot: '))
+    L_rpm = float(input('Enter the left wheel RPM: '))
+    R_rpm = float(input('Enter the right wheel RPM: '))
+    clearance1 = float(input('Enter the clearance for the robot: '))
 
-    #     robot_radius = 0.105
-    #     clearance = 0.16 + clearance1
-    #     theta = 15
-    #     step_size = 1
-    #     theta_goal = 0.0
+    robot_radius = 0.08
+    clearance = 0.4 + clearance1
+    theta = 15
+    step_size = 1
+    theta_goal = 0.0
 
     # else:
 
-    x_start = -4.5
-    y_start = -4.5
-    theta_start = 0.0
-    theta = 15
-    x_goal = 3.5
-    y_goal = 3.5
-    theta_goal = 0.0
-    step_size = 1
+    # x_start = -4.5
+    # y_start = -4.5
+    # theta_start = 0.0
+    # theta = 15
+    # x_goal = 3.5
+    # y_goal = 3.5
+    # theta_goal = 0.0
+    # step_size = 1
 
-    robot_radius = 0.08
-    clearance = 0.4
+    # robot_radius = 0.08
+    # clearance = 0.4
 
-    L_rpm = 2.0
-    R_rpm = 3.0
+    # L_rpm = 2.0
+    # R_rpm = 3.0
 
 
     print("start_coordinates = ", x_start, y_start)
     print("goal_coordinates = ", x_goal, y_goal)
+
+    x_start = -x_start
+    y_start = -y_start
+    x_goal = -x_goal
+    y_goal = -y_goal
     x_start += 5.0
     y_start += 5.0
     x_goal += 5.0
@@ -426,11 +430,11 @@ def main():
         #         path,x_explored,y_explored,x_parent,y_parent = a_star(start_node, goal_node, step_size, theta, robot_radius, clearance)
 
         if path == None:
-            print("Path could not be found. Check inputs")
+            print("Optimal path could not be found.")
 
         else:
-            # end_time = time.time()
-            # print("Time taken to find the shortest path (in seconds) is:", abs(end_time - start_time))
+            end_time = time.time()
+            print("Time taken to find the shortest path (in seconds) is:", abs(end_time - start_time))
             # l = 0
             # while l < len(N_list):
             #     # plt.plot([Xs, Xn], [Ys, Yn], color="blue")
@@ -446,13 +450,13 @@ def main():
             plt.plot(x_path, y_path, "-r")
     # plt.figure(figsize=(10, 10))
     # plt.show()
-    plt.savefig("mygraph.png")
-    plt.pause(20)
+    # plt.savefig("mygraph.png")
+    plt.pause(5)
     plt.close()
     t = time.localtime()
     end_time2 = time.time()
     ros_pub(path, act)
-    print("Time taken to find the shortest path and to plot (in seconds) is:", abs(end_time2 - start_time))
+    # print("Time taken to find the shortest path and to plot (in seconds) is:", abs(end_time2 - start_time))
 
 
 if __name__ == '__main__':

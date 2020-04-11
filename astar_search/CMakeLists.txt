@@ -156,7 +156,7 @@ catkin_package(
 ## Install ##
 #############
 catkin_install_python(PROGRAMS
-  nodes/test.py
+  nodes/test
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

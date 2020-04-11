@@ -1,50 +1,103 @@
 # Astar_algorithm
 
-Implementation of Astar algorithm in python
+Implementation of Astar algorithm and simulation using ROS-Gazebo.
 
 ## Authors
 
  1. Sri Manika Makam
  2. Pradeep Gopal
 
-## Overview
-
- Implemented the Astar algorithm for a rigid robot.
-
 ## Dependencies
 
- 1. numpy library
- 2. cv2 library
- 3. queue library
- 4. math library
- 5. time library
- 6. argparse library
- 7. Python 3.6
- 8. ubuntu 16.04
- 
+1. Ubuntu 16.04
+2. ROS kinetic
+3. Gazebo 
+4. catkin
+5. Turtlebot3 packages
+
+## Libraries:
+
+1. math
+2. numpy
+3. time
+4. matplotlib
+5. Queue
+6. argparse
+7. rospy
+8. geometry_msgs
+9. std_msgs.msg
+
+## Setup
+
+Install turtlebot3-gazebo package by running the below command:
+
+```
+$ sudo apt install ros-kinetic-turtlebot3-gazebo
+```
+
+In your .bashrc file, include the following statements and source it.
+
+```
+source /opt/ros/kinetic/setup.bash
+source ~/catkin_ws/devel/setup.bash
+export TURTLEBOT3_MODEL=burger
+```
+
+To create a workspace and install dependecies for turtlebot3 package, run the following commands:
+
+```
+$ mkdir -p ~/catkin_ws/src
+$ cd ~/catkin_ws/src/
+$ git clone https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
+$ git clone https://github.com/ROBOTIS-GIT/turtlebot3.git
+$ cd ~/catkin_ws/
+$ catkin_make
+```
+
+Download the submitted folder, copy to /catkin_ws/src/ and run the following commands:
+
+```
+$ cd ~/catkin_ws/
+$ catkin_make
+```
+
 ## Instructions to run
 
-The inputs are coordinates of start point, orientation of start point, coordinates of goal point, robot radius, clearance, theta (the angle between the action at each node) and step size. All the inputs are float. The orientation of goal point is taken by default as 0.
+The inputs from user are are coordinates of start point, orientation of start point (in degrees), coordinates of goal point, two RPM values and clearance. 
 
-Go to the directory where code is present and run the following command
+Robot radius is taken by default as 0.08 (which is half the distance between wheels of the robot). Theta (the angle between the action at each node) is taken as 15. The orientation of goal point is taken by default as 0. 
+
+The total clearance is clearance given by user + 0.4 (minimum clearance).
+
+Run roscore in one terminal. And in other terminal run the following command:
 
 ```
-python Astar_rigid.py --user_input 1
+roslaunch astar_search test.launch x_pos:=4.5 y_pos:=4.5 yaw:=3.14
 ```
-If 'user_input' is 1, then user is allowed to give inputs of his wish. 
-If 'user_input' is 0:
+The start coordinates and goal coordinates should be given as negative of the coordinates as observed in right-handed system because the map given has negative axes. For example, if the robot start point is bottom left (-4.5,-4.5) in right-handed coordinate system, it should be given as (4.5,4.5). 
 
-start point = (50.0, 30.0, 60.0), theta = 30.0, goal point = (150, 150, 0), robot_radius = 1.0, clearance = 1.0, step_size = 1.0
+The x,y coordinates of start point should be given in arguments 'x_pos' and 'y_pos' respectively. And argument 'yaw' is (3.14 + orientation at start point in radians). This ensures the turtlebot to spawn at correct position and orientation in gazebo. 
 
-The program will be terminated when you press any key on the keyboard after the path is displayed.
+## Demo
 
-## Output
+For video 1:
 
-The time taken by the algorithm to find the shortest path for default inputs is approximately 9 seconds.
-The time taken to find the shortest path including the live exploration of nodes is approximately 6 minutes
+start point = (4.5,3,0)
+goal point = (0.5,3,0)
+clearance = 0.1
+RPM values = (2,3)
 
-The program will display the explored nodes as the search space is explored and will display the shortest path after it is found.
+The command to run is:
+```
+roslaunch astar_search test.launch x_pos:=4.5 y_pos:=3.0 yaw:=3.14
+```
 
-The video output can be accessed here:
-https://drive.google.com/drive/folders/1AgRXgyogmuREwNg90ecDwI6LoKeRHZlb?usp=sharing
+For video 2:
+
+start point = (4.5,4.5,0)
+goal point = (-3.5,-3.5,0)
+clearance = 0.4
+RPM values = (2,3)
+
+
 
