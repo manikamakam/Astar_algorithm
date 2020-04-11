@@ -100,26 +100,22 @@ def threshold(x, y, th, theta):
     return (x, y, th)
 
 
-def plot_curve(Xi, Yi, Thetai, UL, UR, r, c, flag, N_list, S_list):
+def plot_curve(Xi,Yi,Thetai,UL,UR,r,c,flag,N_list, S_list):
     t = 0
-    r = 0.038
-    L = 0.354
+    r = 0.033
+    L = 0.16
     dt = 0.2
     cost = 0
-    Xn = Xi
-    Yn = Yi
+    Xn=Xi
+    Yn=Yi
     Thetan = 3.14 * Thetai / 180
 
-    # Xi, Yi,Thetai: Input point's coordinates
-    # Xs, Ys: Start point coordinates for plot function
-    # Xn, Yn, Thetan: End point coordintes
-
-    while t < 2:
+    while t<2:
         t = t + dt
         Xs = Xn
         Ys = Yn
-        Xn += r * (UL + UR) * math.cos(Thetan) * dt
-        Yn += r * (UL + UR) * math.sin(Thetan) * dt
+        Xn += 0.5*r * (UL + UR) * math.cos(Thetan) * dt
+        Yn += 0.5*r * (UL + UR) * math.sin(Thetan) * dt
         Thetan += (r / L) * (UR - UL) * dt
         if not (obstacle_check(Xn, Yn, r, c)):
             if flag == 0:
@@ -131,7 +127,9 @@ def plot_curve(Xi, Yi, Thetai, UL, UR, r, c, flag, N_list, S_list):
                 plt.plot([Xs, Xn], [Ys, Yn], color="red")
         else:
             return None
+
     Thetan = 180 * (Thetan) / 3.14
+    
     return [Xn, Yn, Thetan, cost, N_list, S_list]
 
 
@@ -176,16 +174,22 @@ def a_star(start_node, goal_node, step_size, theta, rad, clearance, L_rpm, R_rpm
                 angle = X1[2]
 
                 th = (round(angle / theta) * theta)
+                while(th>360):
+                    th = th - 360
+
+                while(th<-360):
+                    th = th + 360
+
                 if (th < 0):
-                    angle = angle + 360
+                    th= th + 360
 
                 if (th > 360):
-                    angle = angle - 360
+                    th = th - 360
 
                 if (th == 360):
-                    angle = 0
+                    th = 0
 
-                node = (X1[0], X1[1], angle)
+                node = (X1[0], X1[1], th)
 
                 #             node_cost = current_node[0] + cost2go((current_node[1][0],current_node[1][1]) ,node) + cost2go(node, goal[1])
                 node_cost = current_node[0] + X1[3] + cost2go(node, goal[1])
@@ -217,10 +221,9 @@ def a_star(start_node, goal_node, step_size, theta, rad, clearance, L_rpm, R_rpm
             # print('Goal reached')
             # print("Time taken to explore = ", current_time)
             path = []
-            path.append((goal_node[0], goal_node[1]))
+            path.append(goal_node)
 
-            plt.plot(goal_node[0], goal_node[1], color='green', marker='o', linestyle='dashed', linewidth=1,
-                     markersize=4)
+            
             #             str_p1 = str(current_node[2][0])
             #             str_p2 = str(current_node[2][1])
             #             str_p3 = str(current_node[2][2])
@@ -233,14 +236,12 @@ def a_star(start_node, goal_node, step_size, theta, rad, clearance, L_rpm, R_rpm
                 path.append(parent)
                 #                 print("path",path)
                 parent = temp
-                if (parent == (start_node[0], start_node[1])):
+                if (parent == start_node):
                     break
             # t = time.localtime()
             # current_time = time.strftime("%H:%M:%S", t)
             # print("time taken to backtrack = ", current_time)
-            plt.plot(start_node[0], start_node[1], color='green', marker='o', linestyle='dashed', linewidth=1,
-                     markersize=4)
-            #             path.append((start_node[0], start_node[1]))
+            path.append(start_node)
             print("Backtracking done - shortest path found")
 
             path = path[::-1]
@@ -253,9 +254,12 @@ def a_star(start_node, goal_node, step_size, theta, rad, clearance, L_rpm, R_rpm
 def main():
     Parser = argparse.ArgumentParser()
     Parser.add_argument('--user_input')
+    Parser.add_argument('--animation')
+
 
     Args = Parser.parse_args()
     user_input = int(Args.user_input)
+    animation = int(Args.animation)
     if user_input == 1:
         x_start = float(input('Enter the x-coordinate of start point: '))
         y_start = float(input('Enter the y-coordinate of start point: '))
@@ -267,8 +271,8 @@ def main():
         R_rpm = float(input('Enter the right wheel RPM: '))
         clearance1 = float(input('Enter the clearance for the robot: '))
 
-        robot_radius = 0.105
-        clearance = 0.16 + clearance1
+        robot_radius = 0.08     
+        clearance = 0.1 + clearance1
         theta = 15
         step_size = 1
         theta_goal = 0.0
@@ -284,8 +288,8 @@ def main():
         theta_goal = 0.0
         step_size = 1
 
-        robot_radius = 0.033
-        clearance = 0.16
+        robot_radius = 0.08
+        clearance = 0.1
 
         L_rpm = 9.0
         R_rpm = 11.0
@@ -338,19 +342,28 @@ def main():
         #         path,x_explored,y_explored,x_parent,y_parent = a_star(start_node, goal_node, step_size, theta, robot_radius, clearance)
 
         if path == None:
-            print("Path could not be found. Check inputs")
+            print("Optimal Path could not be found.")
 
         else:
             end_time = time.time()
             print("Time taken to find the shortest path (in seconds) is:", abs(end_time - start_time))
-            l = 0
-            while l < len(N_list):
-                # plt.plot([Xs, Xn], [Ys, Yn], color="blue")
-                plt.plot([S_list[l][0], N_list[l][0]], [S_list[l][1], N_list[l][1]], color="blue")
-                # plt.plot([x_explored[l], x_parent[l]], [y_explored[l], y_parent[l]], "-c")
-                l = l + 1
-                plt.show()
-                plt.pause(0.000000000000000000000000000000000005)
+            plt.plot(goal_node[0], goal_node[1], color='green', marker='o', linestyle='dashed', linewidth=1,
+                     markersize=5)
+
+            plt.plot(start_node[0], start_node[1], color='green', marker='o', linestyle='dashed', linewidth=1,
+                     markersize=5)
+
+            
+            if animation ==1:
+	            l = 0
+	            while l < len(N_list):
+	                # plt.plot([Xs, Xn], [Ys, Yn], color="blue")
+	                plt.plot([S_list[l][0], N_list[l][0]], [S_list[l][1], N_list[l][1]], color="blue")
+	                if (l%10==0):
+	                	plt.savefig("Graphs/" + str(l) + ".png")
+	                l = l + 1
+	                # plt.show()
+	                # plt.pause(0.000000000000000000000000000000000005)
 
             path = path[::-1]
             x_path = [path[i][0] for i in range(len(path))]
@@ -358,7 +371,7 @@ def main():
             plt.plot(x_path, y_path, "-r")
     # plt.figure(figsize=(10, 10))
     # plt.show()
-    plt.savefig("mygraph.png")
+    plt.savefig("Graphs/result.png")
     plt.pause(5)
     plt.close()
     t = time.localtime()
