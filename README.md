@@ -63,7 +63,7 @@ $ catkin_make
 
 ## Instructions to run
 
-The inputs from user are are coordinates of start point, orientation of start point (in degrees), coordinates of goal point, two RPM values and clearance. 
+The inputs from user are coordinates of start point, orientation of start point (in degrees), coordinates of goal point, two RPM values and clearance. 
 
 Robot radius is taken by default as 0.08 (which is half the distance between wheels of the robot). Theta (the angle between the action at each node) is taken as 15. The orientation of goal point is taken by default as 0. 
 
