@@ -68,6 +68,7 @@ The inputs from user are are coordinates of start point, orientation of start po
 Robot radius is taken by default as 0.08 (which is half the distance between wheels of the robot). Theta (the angle between the action at each node) is taken as 15. The orientation of goal point is taken by default as 0. 
 
 The total clearance is clearance given by user + 0.1 (minimum clearance).
+Wheel radius is 33mm and distance between the wheels is 160mm for turtlebot3. 
 
 Run roscore in one terminal. And in other terminal run the following command:
 
