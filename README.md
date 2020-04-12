@@ -43,18 +43,7 @@ source ~/catkin_ws/devel/setup.bash
 export TURTLEBOT3_MODEL=burger
 ```
 
-To create a workspace and install dependecies for turtlebot3 package, run the following commands:
-
-```
-$ mkdir -p ~/catkin_ws/src
-$ cd ~/catkin_ws/src/
-$ git clone https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
-$ git clone https://github.com/ROBOTIS-GIT/turtlebot3.git
-$ cd ~/catkin_ws/
-$ catkin_make
-```
-
-Copy the 'Phase_4/astar_search' package to /catkin_ws/src/ and run the following commands:
+Run the following commands:
 
 ```
 $ cd ~/catkin_ws/
