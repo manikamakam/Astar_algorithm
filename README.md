@@ -83,9 +83,9 @@ The x,y coordinates of start point should be given in arguments 'x_pos' and 'y_p
 
 For video 1:
 
-start point = (4.5,3,0)
-goal point = (0.5,3,0)
-clearance = 0
+start point = (4.5,3,0);
+goal point = (0.5,3,0);
+clearance = 0;
 RPM values = (2,3)
 
 The command to run is:
@@ -95,9 +95,9 @@ roslaunch astar_search test.launch x_pos:=4.5 y_pos:=3.0 yaw:=3.14
 
 For video 2:
 
-start point = (4.5,4.5,0)
-goal point = (-3.5,-3.5,0)
-clearance = 0.3
+start point = (4.5,4.5,0);
+goal point = (-3.5,-3.5,0);
+clearance = 0.3;
 RPM values = (2,3)
 
 The command to run is:
