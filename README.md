@@ -7,44 +7,47 @@ Implementation of Astar algorithm in python
  1. Sri Manika Makam
  2. Pradeep Gopal
 
-## Overview
-
- Implemented the Astar algorithm for a rigid robot.
-
 ## Dependencies
 
  1. numpy library
- 2. cv2 library
+ 2. matplotlib library
  3. queue library
  4. math library
  5. time library
  6. argparse library
- 7. Python 3.6
+ 7. Python 3.5
  8. ubuntu 16.04
  
 ## Instructions to run
 
-The inputs are coordinates of start point, orientation of start point, coordinates of goal point, robot radius, clearance, theta (the angle between the action at each node) and step size. All the inputs are float. The orientation of goal point is taken by default as 0.
+The inputs from user are coordinates of start point, orientation of start point (in degrees), coordinates of goal point, two RPM values and clearance. 
+
+Robot radius is taken by default as 0.08 (which is half the distance between wheels of the robot). Theta (the angle between the action at each node) is taken as 15. The orientation of goal point is taken by default as 0. 
+
+The total clearance is clearance given by user + 0.16 (minimum clearance).
+Wheel radius is 33mm and distance between the wheels is 160mm for turtlebot3.
 
 Go to the directory where code is present and run the following command
 
 ```
-python Astar_rigid.py --user_input 1
+python a_star.py --user_input 0 --animation 0
 ```
 If 'user_input' is 1, then user is allowed to give inputs of his wish. 
 If 'user_input' is 0:
 
-start point = (50.0, 30.0, 60.0), theta = 30.0, goal point = (150, 150, 0), robot_radius = 1.0, clearance = 1.0, step_size = 1.0
+start point = (-4.5,-4.5,0), theta = 15.0, goal point = (4.5, 4.5, 0), robot_radius = 0.08, clearance = 0.16, RPM1 = 9 and RPM2 = 11.
 
-The program will be terminated when you press any key on the keyboard after the path is displayed.
+If animation = 1, you can observe the exploration of nodes, but please note that this will take a lot of time.
+
+If animation = 0, the program displays the exploration space and optimal path at once. 
+
+The coordinates are given as per right-handed coordinate system (Gazebo coordinate system).
 
 ## Output
 
-The time taken by the algorithm to find the shortest path for default inputs is approximately 9 seconds.
-The time taken to find the shortest path including the live exploration of nodes is approximately 6 minutes
+The time taken by the algorithm to find the shortest path for default inputs is approximately 0.33 seconds.
 
-The program will display the explored nodes as the search space is explored and will display the shortest path after it is found.
+The figure showing exploration space and shortest path is saved as 'output.png'.
 
-The video output can be accessed here:
-https://drive.google.com/drive/folders/1AgRXgyogmuREwNg90ecDwI6LoKeRHZlb?usp=sharing
+The video output is saved as 'Phase3_video.mp4'.
 
