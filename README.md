@@ -100,3 +100,8 @@ goal point = (-3.5,-3.5,0)
 clearance = 0.3
 RPM values = (2,3)
 
+The command to run is:
+```
+roslaunch astar_search test.launch x_pos:=4.5 y_pos:=4.5 yaw:=3.14
+```
+
