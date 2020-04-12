@@ -81,7 +81,7 @@ The x,y coordinates of start point should be given in arguments 'x_pos' and 'y_p
 
 ## Demo
 
-For video 1:
+For video 1 (Phase4_video1.mp4):
 
 start point = (4.5,3,0);
 goal point = (0.5,3,0);
@@ -93,7 +93,7 @@ The command to run is:
 roslaunch astar_search test.launch x_pos:=4.5 y_pos:=3.0 yaw:=3.14
 ```
 
-For video 2:
+For video 2 (Phase4_video2.mp4):
 
 start point = (4.5,4.5,0);
 goal point = (-3.5,-3.5,0);
