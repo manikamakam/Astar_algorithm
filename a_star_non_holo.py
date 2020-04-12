@@ -104,11 +104,14 @@ def plot_curve(Xi,Yi,Thetai,UL,UR,r,c,flag,N_list, S_list):
     t = 0
     r = 0.033
     L = 0.16
-    dt = 0.2
+    dt = 0.5
     cost = 0
     Xn=Xi
     Yn=Yi
     Thetan = 3.14 * Thetai / 180
+
+    # UL = UL*2*math.pi/60
+    # UR = UR*2*math.pi/60
 
     while t<2:
         t = t + dt
@@ -136,6 +139,10 @@ def plot_curve(Xi,Yi,Thetai,UL,UR,r,c,flag,N_list, S_list):
 def a_star(start_node, goal_node, step_size, theta, rad, clearance, L_rpm, R_rpm):
     N_list = []
     S_list = []
+    x_parent =[]
+    x_explored =[]
+    y_parent=[]
+    y_explored=[]
 
     start_node = threshold(start_node[0], start_node[1], start_node[2], theta)
 
@@ -202,14 +209,14 @@ def a_star(start_node, goal_node, step_size, theta, rad, clearance, L_rpm, R_rpm
                 if obstacle_check(node[0], node[1], rad, clearance) == False:
                     if (visited_nodes[int(node[0] * 10)][int(node[1] * 10)][int(node[2] / (theta))] == 0):
                         visited_nodes[int(node[0] * 10)][int(node[1] * 10)][int(node[2] / (theta))] = 1
-                        #                     x_explored.append(node[0])
-                        #                     y_explored.append(node[1])
-                        #                     x_parent.append(node_parent[0])
-                        #                     y_parent.append(node_parent[1])
+                        x_explored.append(node[0])
+                        y_explored.append(node[1])
+                        x_parent.append(node_parent[0])
+                        y_parent.append(node_parent[1])
 
-                        #                     new_node = (node_cost, node, node_parent, act)
-                        #                         print("newnodeappended",new_node)
-                        #                         print("\n")
+                                            # new_node = (node_cost, node, node_parent, act)
+                                            #     print("newnodeappended",new_node)
+                                            #     print("\n")
                         nodes.put(new_node)
 
         if goalcheck_circle(current_node[1][0], current_node[1][1], goal_node[0], goal_node[1]):
@@ -248,7 +255,7 @@ def a_star(start_node, goal_node, step_size, theta, rad, clearance, L_rpm, R_rpm
             print(path)
             # print(N_list, S_list)
 
-            return path, N_list, S_list
+            return path, N_list, S_list, x_explored, y_explored,x_parent,y_parent
 
 
 def main():
@@ -291,12 +298,12 @@ def main():
         robot_radius = 0.08
         clearance = 0.1
 
-        L_rpm = 9.0
-        R_rpm = 11.0
+        L_rpm = 7
+        R_rpm = 10
 
 
-    print("start_coordinates = ", x_start, y_start)
-    print("goal_coordinates = ", x_goal, y_goal)
+    print("start_coordinates = ", (x_start, y_start))
+    print("goal_coordinates = ", (x_goal, y_goal))
     x_start += 5.0
     y_start += 5.0
     x_goal += 5.0
@@ -337,12 +344,12 @@ def main():
         ax.add_artist(c4)
         ax.set_aspect('equal')
         plt.grid()
-        path, N_list, S_list = a_star(start_node, goal_node, step_size, theta, robot_radius, clearance, L_rpm, R_rpm)
+        path, N_list, S_list,x_explored,y_explored,x_parent,y_parent = a_star(start_node, goal_node, step_size, theta, robot_radius, clearance, L_rpm, R_rpm)
 
         #         path,x_explored,y_explored,x_parent,y_parent = a_star(start_node, goal_node, step_size, theta, robot_radius, clearance)
 
         if path == None:
-            print("Optimal Path could not be found.")
+            print("Optimal path could not be found.")
 
         else:
             end_time = time.time()
@@ -353,14 +360,21 @@ def main():
             plt.plot(start_node[0], start_node[1], color='green', marker='o', linestyle='dashed', linewidth=1,
                      markersize=5)
 
-            
+            if animation ==0:
+                N_x = [N_list[i][0] for i in range(len(N_list))]
+                N_y = [N_list[i][1] for i in range(len(N_list))]
+                plt.plot(N_x, N_y, "-b")
+
+            print(len(N_list))
+            print(len(S_list))
             if animation ==1:
 	            l = 0
 	            while l < len(N_list):
 	                # plt.plot([Xs, Xn], [Ys, Yn], color="blue")
-	                plt.plot([S_list[l][0], N_list[l][0]], [S_list[l][1], N_list[l][1]], color="blue")
-	                if (l%10==0):
-	                	plt.savefig("Graphs/" + str(l) + ".png")
+	                plt.plot([S_list[l][0], N_list[l][0]], [S_list[l][1], N_list[l][1]], color="blue", linewidth=1)
+	                # plt.plot([x_parent[l], x_explored[l]], [y_parent[l], y_explored[l]], color="blue", linewidth=1)
+	                # if (l%15==0):
+	                # 	plt.savefig("Graphs/" + str(l) + ".png")
 	                l = l + 1
 	                # plt.show()
 	                # plt.pause(0.000000000000000000000000000000000005)
@@ -370,13 +384,13 @@ def main():
             y_path = [path[i][1] for i in range(len(path))]
             plt.plot(x_path, y_path, "-r")
     # plt.figure(figsize=(10, 10))
-    # plt.show()
+    plt.show()
     plt.savefig("Graphs/result.png")
     plt.pause(5)
-    plt.close()
+    # plt.close()
     t = time.localtime()
     end_time2 = time.time()
-    print("Time taken to find the shortest path and to plot (in seconds) is:", abs(end_time2 - start_time))
+    print("Time taken to find the shortest path and to generate the video (in seconds) is:", abs(end_time2 - start_time))
 
 
 if __name__ == '__main__':
