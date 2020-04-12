@@ -54,7 +54,7 @@ $ cd ~/catkin_ws/
 $ catkin_make
 ```
 
-Download the 'Phase_4' folder, copy to /catkin_ws/src/ and run the following commands:
+Copy the 'Phase_4/astar_search' package to /catkin_ws/src/ and run the following commands:
 
 ```
 $ cd ~/catkin_ws/
