@@ -54,7 +54,7 @@ $ cd ~/catkin_ws/
 $ catkin_make
 ```
 
-Download the submitted folder, copy to /catkin_ws/src/ and run the following commands:
+Download the 'Phase_4' folder, copy to /catkin_ws/src/ and run the following commands:
 
 ```
 $ cd ~/catkin_ws/
